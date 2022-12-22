@@ -1,5 +1,5 @@
 <?php
-    include $_SERVER['DOCUMENT_ROOT'].'/main)backend/etc/error/php';
+    // include $_SERVER['DOCUMENT_ROOT'].'/main)backend/etc/error/php';
 
     include_once $_SERVER['DOCUMENT_ROOT'].'/main_backend/connect/dbconn.php';
 
