@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'].'/main)backend/etc/error/php';
+include $_SERVER['DOCUMENT_ROOT'].'/main_backend/etc/error/php';
 date_default_timezone_set('Asia/Seoul');
 
 
