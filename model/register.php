@@ -91,7 +91,7 @@
                 
                 $_SESSION['userid'] = $userid;
                 $_SESSION['useridx'] = $login_data['user_idx'];
-                echo json_encode(array("userid" => $_SESSION['userid'], "useridx" => ['useridx']));
+                echo json_encode(array("userid" => $_SESSION['userid'], "useridx" => $_SESSION['useridx']));
 
             }
             
