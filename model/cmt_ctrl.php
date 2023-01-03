@@ -1,6 +1,46 @@
 <?php
 
+
 // include $_SERVER['DOCUMENT_ROOT'].'/main_backend/etc/error/php';
+
+function parse_raw_http_request(array &$a_data)
+{
+  // read incoming data
+  $input = file_get_contents('php://input');
+  
+  // grab multipart boundary from content type header
+  preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
+  $boundary = $matches[1];
+  
+  // split content by boundary and get rid of last -- element
+  $a_blocks = preg_split("/-+$boundary/", $input);
+  array_pop($a_blocks);
+      
+  // loop data blocks
+  foreach ($a_blocks as $id => $block)
+  {
+    if (empty($block))
+      continue;
+    
+    // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
+    
+    // parse uploaded files
+    if (strpos($block, 'application/octet-stream') !== FALSE)
+    {
+      // match "name", then everything after "stream" (optional) except for prepending newlines 
+      preg_match('/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s', $block, $matches);
+    }
+    // parse all other fields
+    else
+    {
+      // match "name" and optional value in between newline sequences
+      preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+    }
+    $a_data[$matches[1]] = $matches[2];
+  }        
+}
+// php관련참조:https://stackoverflow.com/questions/20572639/get-patch-request-data-in-php
+
 include_once $_SERVER['DOCUMENT_ROOT'].'/main_backend/connect/dbconn.php';
 
 if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['req_sign']) && $_GET['req_sign'] == "post_cmt") {
@@ -52,9 +92,75 @@ if ($stmt->affected_rows > 0 ) {
     echo json_encode(array("msg" => "상품평 입력이 되지 않았습니다."));
 }
 
+// join 참조:https://pearlluck.tistory.com/46
 
   // echo json_encode(array("u_idx" => $u_idx, "pro_idx" => $pro_idx, "content" => $content, "cmt_reg" => $cmt_reg));
 }
-function get_cmt($conn) {}
-function patch_cmt($conn) {}
+//상품 조회
+function get_cmt($conn) {
+
+  $p_idx = $_GET['p_idx'];
+
+  if (isset($_SESSION['userid'])) {
+    $userid = $_SESSION['userid'];
+  } else {
+    $userid = "guest";
+  }
+
+  $userid = $_SESSION['userid'];
+
+  //spl_cmt 터이블 전체 데이터와 spl_user 테이블의 아이디를 조회한다. (두 개 테이블 데이터를 동시 조회하기 위해서는 테이블간 join이 필요하다.)
+  // join 참조:https://pearlluck.tistory.com/46
+  //조회된 데이터는 파라미터의 상품 데이터에 한정한다.
+  //조회 결과는 시간의 역순, 즉 최신순으로 나열한다.
+  $sql = "SELECT spl_cmt.*, spl_user.user_id FROM spl_cmt JOIN spl_user ON spl_cmt.cmt_u_idx = spl_user.user_idx WHERE cmt_pro_idx = $p_idx ORDER BY spl_cmt.cmt_reg DESC";
+  $result = mysqli_query($conn, $sql);
+  if (!mysqli_num_rows($result)) {
+    echo json_encode(array("msg" => "조회된 게시글이 없습니다."));
+    exit();
+  } else {
+    $json_result = array(); //빈 배열 초기화
+    while ($row = mysqli_fetch_array($result)) {
+      array_push($json_result, array("cmt_idx" => $row['cmt_idx'], "cmt_cont" => $row['cmt_cont'], "cmt_reg" => $row['cmt_reg'],"user_id" => $row['user_id'],  "session_id" => $userid)); //첫번째 파라미터 : 대상 배열, 두번째 파라미터는 배열 입력값
+    }
+  }
+
+
+  echo json_encode($json_result);
+}
+function patch_cmt($conn) {
+  // 업데이트 구문 조 : http://www.tcpschool.com/mysql/mysql_basic_update
+
+  $_PATCH = [];
+  parse_str(file_get_contents('php://input'), $_PATCH);
+parse_raw_http_request($_PATCH);
+  $cmt_idx = $_GET['cmt_idx'];
+  $cmt_cont = $_PATCH['update_cont'];
+  //php에서는 공식적으로 post와 get만 지원한다. 따라서 patch, delete, put 등은 별도의 접근 처리를 해줘야한다.
+  $sql = "UPDATE spl_cmt SET cmt_cont = ? WHERE cmt_idx = ?";
+
+  if (!isset($_SESSION['useridx'])) {
+    echo json_encode(array("msg" => "작성한 본인이 아니면 수정할 수 없습니다."));
+    exit();
+  }
+  
+  $stmt = $conn->stmt_init();
+
+if (!$stmt->prepare($sql)) {
+  http_response_code(400);
+  echo json_encode(array("msg" => "글 수정에 실패했습니다."));
+} 
+
+$stmt -> bind_param("ss", $cmt_cont, $cmt_idx);
+$stmt -> execute();
+
+if ($stmt->affected_rows > 0 ) {
+    http_response_code(200);
+    echo json_encode(array("msg" => "상품평이 수정되었습니다."));
+} else {
+    http_response_code(400);
+    echo json_encode(array("msg" => "상품평 입력이 되지 않았습니다."));
+}
+  // echo json_encode(array("cmt_idx" => $cmt_idx, "cmt_cont" => $cmt_cont));
+}
 ?>
