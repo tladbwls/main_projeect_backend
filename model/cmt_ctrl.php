@@ -66,7 +66,7 @@ function post_cmt($conn) {
   $cmt_reg = date("Y-m-d H:i:s");
 
   if (!isset($_POST['cmt_star'])) {
-    $cmt_star = 0;
+    $cmt_star = 1;
   } else {
     $cmt_star = $_POST['cmt_star'];
   }
@@ -131,7 +131,7 @@ function get_cmt($conn) {
   } else {
     $json_result = array(); //빈 배열 초기화
     while ($row = mysqli_fetch_array($result)) {
-      array_push($json_result, array("cmt_idx" => $row['cmt_idx'], "cmt_cont" => $row['cmt_cont'], "cmt_reg" => $row['cmt_reg'],"user_id" => $row['user_id'],  "session_id" => $userid)); //첫번째 파라미터 : 대상 배열, 두번째 파라미터는 배열 입력값
+      array_push($json_result, array("cmt_idx" => $row['cmt_idx'], "cmt_cont" => $row['cmt_cont'], "cmt_reg" => $row['cmt_reg'],"user_id" => $row['user_id'],  "session_id" => $userid, "rating" => $row['cmt_star'])); //첫번째 파라미터 : 대상 배열, 두번째 파라미터는 배열 입력값
     }
   }
 
