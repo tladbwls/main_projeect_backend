@@ -146,14 +146,17 @@ function patch_cmt($conn) {
 parse_raw_http_request($_PATCH);
   $cmt_idx = $_GET['cmt_idx'];
   $cmt_cont = $_PATCH['update_cont'];
+  $cmt_star = $_PATCH['cmt_star'];
   //php에서는 공식적으로 post와 get만 지원한다. 따라서 patch, delete, put 등은 별도의 접근 처리를 해줘야한다.
-  $sql = "UPDATE spl_cmt SET cmt_cont = ? WHERE cmt_idx = ?";
+//   $sql = "UPDATE spl_cmt SET cmt_cont = ? WHERE cmt_idx = ?";
 
   if (!isset($_SESSION['useridx'])) {
     echo json_encode(array("msg" => "작성한 본인이 아니면 수정할 수 없습니다."));
     exit();
   }
-  
+  // echo json_encode(array("cmt_idx" => $cmt_idx, "cmt_cont" => $cmt_cont, "cmt_star" => $cmt_star));
+
+  $sql = "UPDATE spl_cmt SET cmt_cont = ?, cmt_star = ? WHERE cmt_idx = ?";
   $stmt = $conn->stmt_init();
 
 if (!$stmt->prepare($sql)) {
@@ -161,16 +164,16 @@ if (!$stmt->prepare($sql)) {
   echo json_encode(array("msg" => "글 수정에 실패했습니다."));
 } 
 
-$stmt -> bind_param("ss", $cmt_cont, $cmt_idx);
+$stmt -> bind_param("sss", $cmt_cont, $cmt_star, $cmt_idx);
 $stmt -> execute();
 
-if ($stmt->affected_rows > 0 ) {
-    http_response_code(200);
+// if ($stmt->affected_rows > 0 ) {
+//     http_response_code(200);
     echo json_encode(array("msg" => "상품평이 수정되었습니다."));
-} else {
-    http_response_code(400);
-    echo json_encode(array("msg" => "상품평 입력이 되지 않았습니다."));
-}
+// } else {
+//     http_response_code(400);
+//     echo json_encode(array("msg" => "상품평 입력이 되지 않았습니다."));
+// }
   // echo json_encode(array("cmt_idx" => $cmt_idx, "cmt_cont" => $cmt_cont));
 }
 ?>
