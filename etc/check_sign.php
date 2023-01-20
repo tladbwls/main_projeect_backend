@@ -9,7 +9,6 @@ if(isset($_SESSION['userid'])) {
 } else {
     $userid = "guest";
     $useridx = -1;
-    // echo json_encode(array("userid" => "guest"));
 }
 
 if (isset($_SESSION['cart'])) {

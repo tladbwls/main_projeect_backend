@@ -69,26 +69,14 @@ function get_user($conn) {
 
 
   echo json_encode($json_result);
-  // echo json_encode(array("msg" => "사용자 데이터 요청."));
 }
 function patch_user($conn) {
   $_PATCH = [];
   parse_str(file_get_contents('php://input'), $_PATCH);
 parse_raw_http_request($_PATCH);
 
-  // $user_id = $_SESSION['userid'];
   $user_idx = $_GET['user_idx'];
   $user_lvl = $_PATCH['lvl'];
-
-  // if (!$user_id || $user_lvl != 1 ) {
-  //   echo "
-  //   <script>
-  //     alert ('잘못된 접근입니다.');
-  //     location.href = '/main_project/index.html';
-  //   </script>
-  //   ";
-  //   exit();
-  // }
 
   // //업데이트 구문 : UPDATE [table name] SET [update column] = [update value] WHERE [condition]
   $sql = "UPDATE spl_user SET user_lvl = ? WHERE user_idx = ?";
@@ -109,7 +97,6 @@ if ($stmt->affected_rows > 0 ) {
     // http_response_code(400);
     echo json_encode(array("msg" => "레벨 변경이 되지 않았습니다."));
 }
-  // echo json_encode(array("user_id" => $user_id, "user_idx" => $user_idx, "user_lvl" => $user_lvl));
 }
 function del_user($conn) {
 

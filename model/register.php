@@ -94,19 +94,8 @@
                 $_SESSION['useridx'] = $login_data['user_idx'];
                 $_SESSION['userlvl'] = $login_data['user_lvl'];
                 echo json_encode(array("userid" => $_SESSION['userid'], "useridx" => $_SESSION['useridx'], "userlvl" => $_SESSION['userlvl']));
-
             }
-            
-            // echo json_encode((array("userid"=>$pwd_valid))); 
-
-            
-            // echo json_encode(array("userid" => $login_data));
         }
-        
-
-        // echo $userid, $pwd;
-        // echo json_encode(array("userid" => mysqli_num_rows($result)));
-
     } //로그인 처리 함수
 
     function signout(){

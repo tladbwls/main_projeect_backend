@@ -87,8 +87,4 @@ if ($stmt->affected_rows > 0 ) {
     echo json_encode(array("msg5" => "입력에 실패하였습니다."));
 }
 
-
-
-// echo json_encode(array("msg" => $pro_name, "price" => $pro_price, "desc" => $pro_desc,"reg" => $pro_reg, "img_info" => $image_info, "img_name" => $image_name,"img_tmp_name" => $image_tmp_name,"img_type" => $image_type,"img_size" => $image_size,"img_error" => $image_error, "exp" => $exp ));
-
 ?>

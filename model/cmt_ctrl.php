@@ -71,10 +71,6 @@ function post_cmt($conn) {
     $cmt_star = $_POST['cmt_star'];
   }
 
-
-
-  // echo json_encode(array("u_idx" => $u_idx, "pro_idx" => $pro_idx, "content" => $content, "cmt_reg" => $cmt_reg, "cmt_star" => $cmt_star));
-
 if (!isset($_SESSION['useridx'])) {
   echo json_encode(array("msg" => "상품평을 작성하시려면 로그인이 필요합니다."));
   exit();
@@ -103,8 +99,6 @@ if ($stmt->affected_rows > 0 ) {
 }
 
 // join 참조:https://pearlluck.tistory.com/46
-
-  // echo json_encode(array("u_idx" => $u_idx, "pro_idx" => $pro_idx, "content" => $content, "cmt_reg" => $cmt_reg));
 }
 //상품 조회
 function get_cmt($conn) {
@@ -156,13 +150,11 @@ parse_raw_http_request($_PATCH);
   $cmt_cont = $_PATCH['update_cont'];
   $cmt_star = $_PATCH['cmt_star'];
   //php에서는 공식적으로 post와 get만 지원한다. 따라서 patch, delete, put 등은 별도의 접근 처리를 해줘야한다.
-//   $sql = "UPDATE spl_cmt SET cmt_cont = ? WHERE cmt_idx = ?";
 
   if (!isset($_SESSION['useridx'])) {
     echo json_encode(array("msg" => "작성한 본인이 아니면 수정할 수 없습니다."));
     exit();
   }
-  // echo json_encode(array("cmt_idx" => $cmt_idx, "cmt_cont" => $cmt_cont, "cmt_star" => $cmt_star));
 
   $sql = "UPDATE spl_cmt SET cmt_cont = ?, cmt_star = ? WHERE cmt_idx = ?";
   $stmt = $conn->stmt_init();
@@ -175,13 +167,7 @@ if (!$stmt->prepare($sql)) {
 $stmt -> bind_param("sss", $cmt_cont, $cmt_star, $cmt_idx);
 $stmt -> execute();
 
-// if ($stmt->affected_rows > 0 ) {
 //     http_response_code(200);
     echo json_encode(array("msg" => "상품평이 수정되었습니다."));
-// } else {
-//     http_response_code(400);
-//     echo json_encode(array("msg" => "상품평 입력이 되지 않았습니다."));
-// }
-  // echo json_encode(array("cmt_idx" => $cmt_idx, "cmt_cont" => $cmt_cont));
 }
 ?>
