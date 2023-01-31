@@ -1,5 +1,5 @@
 <?php
-  include $_SERVER['DOCUMENT_ROOT'].'/main_backend/etc/error/php';
+  include $_SERVER['DOCUMENT_ROOT'].'/soaply_backend/etc/error/php';
   // SELECT * FROM [table name] WHERE [option]
   //1. DB 접속
   //2. sql 쿼리 실행
@@ -13,7 +13,7 @@
   }
 
  //접속 정보 로그
-  include_once $_SERVER['DOCUMENT_ROOT'].'/main_backend/connect/dbconn.php';
+  include_once $_SERVER['DOCUMENT_ROOT'].'/soaply_backend/connect/dbconn.php';
 
   $sql = "SELECT * FROM spl_products ORDER BY pro_reg DESC $query_qnt";
   $result = mysqli_query($conn, $sql); //첫번째 파라미터 : 접속정보, 두번째 파라미터: 쿼리문

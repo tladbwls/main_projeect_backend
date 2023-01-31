@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'].'/main_backend/etc/error/php';
+include $_SERVER['DOCUMENT_ROOT'].'/soaply_backend/etc/error/php';
 date_default_timezone_set('Asia/Seoul');
 
 
@@ -47,7 +47,7 @@ if ($limit <= $image_size) {
 
 }
 
-$image_dir = $_SERVER['DOCUMENT_ROOT'].'/main_project/images/products/'; //사진이 저장될 경로 저장
+$image_dir = $_SERVER['DOCUMENT_ROOT'].'/soaply/images/products/'; //사진이 저장될 경로 저장
 
 //이미지 업로드 : * 파일 업로드 시 파일 자체는 지정한 디렉토리 안으로 가고, DB에는 파일 이름 문자열이 저장된다.
 if ($image_name && !$image_error) {
@@ -62,7 +62,7 @@ if ($image_name && !$image_error) {
 }
 
 //접속 정보 로드
-include_once $_SERVER['DOCUMENT_ROOT'].'/main_backend/connect/dbconn.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/soaply_backend/connect/dbconn.php';
 
 //sql 명령어 입력
 $sql = "INSERT INTO spl_products (pro_name, pro_pri, pro_desc, pro_img, pro_reg) VALUES (?,?,?,?,?)";

@@ -41,7 +41,7 @@ function parse_raw_http_request(array &$a_data)
 }
 // php관련참조:https://stackoverflow.com/questions/20572639/get-patch-request-data-in-php
 
-include_once $_SERVER['DOCUMENT_ROOT'].'/main_backend/connect/dbconn.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/soaply_backend/connect/dbconn.php';
 
 if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['req_sign']) && $_GET['req_sign'] == "post_cmt") {
   post_cmt($conn);
@@ -128,7 +128,7 @@ function get_cmt($conn) {
 
 
   if (!mysqli_num_rows($result)) {
-    echo json_encode(array("msg" => "조회된 게시글이 없습니다."));
+    echo json_encode(array("msg" => "조회된 게시글이 없습니다.", "avg" => 0));
     exit();
   } else {
     $json_result = array(); //빈 배열 초기화
